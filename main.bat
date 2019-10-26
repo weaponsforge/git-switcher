@@ -11,6 +11,7 @@ GOTO Main
   cls
   echo ----------------------------------------------------------
   echo VIEWING GIT SWITCHER OPTIONS
+  echo ----------------------------------------------------------
   echo [1] View git user config
   echo [2] Edit git user config
   echo [3] Exit
@@ -31,6 +32,7 @@ EXIT /B 0
   cls
   echo ----------------------------------------------------------
   echo EDIT GIT USER CONFIG DETAILS
+  echo ----------------------------------------------------------
 
   :: Clear the input variables
   set "gitusername="
@@ -52,6 +54,7 @@ EXIT /B 0
   cls
   echo ----------------------------------------------------------
   echo USER CONFIG DETAILS
+  echo ----------------------------------------------------------
   
   echo|set /p=Username:
   git config --get user.name
@@ -70,12 +73,13 @@ EXIT /B 0
   set gitcredentials=C:\Users\%username%\.gitcredential
   set newcredentials=C:\Users\%username%\.gitcredentialnew
   set findstr=@github.com
-  set gitindex=""
+  set /A gitindex=4
 
   echo Which Git account password would you like to reset?
   echo [1] Github
   echo [2] Gitlab
   echo [3] BitBucket
+  echo [4] Exit
   set /p gitindex="Select option:"
 
   (if %gitindex% EQU 1 (
@@ -84,6 +88,8 @@ EXIT /B 0
     set findstr=@gitlab.com
   ) else if %gitindex% EQU 3 (
     set findstr=@bitbucket.org
+  ) else (
+    GOTO Main
   ))
 
   :: Delete temporary file
@@ -103,9 +109,9 @@ EXIT /B 0
         type %newcredentials% > %gitcredentials%
         GOTO ExitResetPassword
       )
-
-      GOTO ExitResetPassword
     ))
+
+    GOTO ExitResetPassword
   ) else (
     echo %gitcredentials% was not found.
     echo Make sure your windows User path is correct and try again.
@@ -118,7 +124,7 @@ EXIT /B 0
   :: Delete temporary git credentials file
   if exist %newcredentials% (
     del /f %newcredentials% && (
-      set /p choice=New git user's password has been reset...
+      set /p choice=Git user's password has been reset...
       GOTO ViewUserConfig
     ) || (
       set /p choice=Failed deleting temporary file.
