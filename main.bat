@@ -1,5 +1,6 @@
 ::----------------------------------------------------------
 :: Change the git user.name and user.email
+:: Reset the user's git password
 :: weaponsforge;20191026
 ::----------------------------------------------------------
 
@@ -68,7 +69,7 @@ EXIT /B 0
 
 
 :: Delete the password for the newly-set git user so it will be
-:: prompted on suceeding git operations
+:: prompted on the next git operation
 :ResetPassword
   set gitcredentials=C:\Users\%username%\.gitcredential
   set newcredentials=C:\Users\%username%\.gitcredentialnew
@@ -120,6 +121,7 @@ EXIT /B 0
 EXIT /B 0
 
 
+:: Exit from the git reset password
 :ExitResetPassword
   :: Delete temporary git credentials file
   if exist %newcredentials% (
@@ -137,6 +139,7 @@ EXIT /B 0
 EXIT /B 0
 
 
+:: Process errors
 :ProcessError
   set /p choice=Press Enter to continue...
   GOTO Main
