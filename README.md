@@ -29,7 +29,7 @@ Windows batch script to automate git user (view, edit and reset password) comman
 	- Delete your **github** access credentials from the **Windows Credentials Manager**
 		- Search for **Credential Manager** from the Search box
 		- Click the **Windows Credentials** button
-		- Find and delete the entry for **github**
+		- Find and delete the entry for **github**, **gitlab**, or **bitbucket**
 	- Open a command prompt as an **Administrator** and run the command:  
 `git config --global credential.helper "store --file ~/.gitcredential"`
 	- Run `git config --list --show-origin` to view updates.  
