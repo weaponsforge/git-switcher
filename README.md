@@ -11,4 +11,11 @@
 3. GitHub account
 
 
+
+## Usage
+
+1. Clone this repository.  
+`git clone https://github.com/weaponsforge/git-switcher.git`
+
+
 20191026
