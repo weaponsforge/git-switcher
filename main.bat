@@ -7,8 +7,17 @@
 @echo off
 GOTO Main
 
+
 :: Display the main menu
 :Main
+  :: Clear the input variables
+  set "gitusername="
+  set "email="
+  set "doreset="
+  set "findstr="
+  set /A choice=1
+  set /A gitrepository=4
+
   cls
   echo ----------------------------------------------------------
   echo VIEWING GIT SWITCHER OPTIONS
@@ -35,10 +44,6 @@ EXIT /B 0
   echo EDIT GIT USER CONFIG DETAILS
   echo ----------------------------------------------------------
 
-  :: Clear the input variables
-  set "gitusername="
-  set "email="
-
   set /p gitusername="Enter git user.name:"
   git config --global user.name %gitusername%
 
@@ -46,7 +51,13 @@ EXIT /B 0
   git config --global user.email %email%
 
   echo Updated git user config...
-  GOTO ResetPassword
+  set /p doreset=Would you like to reset the password? [Y/n]:
+
+  echo.%doreset% | findstr /C:"Y">nul && (
+    GOTO ResetPassword
+  ) || (
+    GOTO Main
+  )
 EXIT /B 0
 
 
@@ -54,7 +65,7 @@ EXIT /B 0
 :ViewUserConfig
   cls
   echo ----------------------------------------------------------
-  echo USER CONFIG DETAILS
+  echo GIT USER CONFIG DETAILS (global)
   echo ----------------------------------------------------------
   
   echo|set /p=Username:
@@ -73,21 +84,19 @@ EXIT /B 0
 :ResetPassword
   set gitcredentials=C:\Users\%username%\.gitcredential
   set newcredentials=C:\Users\%username%\.gitcredentialnew
-  set findstr=@github.com
-  set /A gitindex=4
 
   echo Which Git account password would you like to reset?
   echo [1] Github
   echo [2] Gitlab
   echo [3] BitBucket
   echo [4] Exit
-  set /p gitindex="Select option:"
+  set /p gitrepository="Select option:"
 
-  (if %gitindex% EQU 1 (
+  (if %gitrepository% EQU 1 (
     set findstr=@github.com
-  ) else if %gitindex% EQU 2 (
+  ) else if %gitrepository% EQU 2 (
     set findstr=@gitlab.com
-  ) else if %gitindex% EQU 3 (
+  ) else if %gitrepository% EQU 3 (
     set findstr=@bitbucket.org
   ) else (
     GOTO Main
@@ -126,7 +135,7 @@ EXIT /B 0
   :: Delete temporary git credentials file
   if exist %newcredentials% (
     del /f %newcredentials% && (
-      set /p choice=Git user's password has been reset...
+      echo|set /p=choice=Git user's %findstr% password has been reset...
       GOTO ViewUserConfig
     ) || (
       set /p choice=Failed deleting temporary file.
