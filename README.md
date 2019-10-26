@@ -8,8 +8,14 @@
 1. Windows 10 OS 64-bit
 2. [Git Bash](https://gitforwindows.org/) for Windows
 	- version 2.11.0 was used for this tool
+	- installed using default options
 3. GitHub account
 
+
+## Content
+
+1. **main.bat**  
+Windows batch script to automate git user (view, edit) commands.
 
 
 ## Usage
@@ -24,8 +30,12 @@
 		- Find and delete the entry for **github**
 	- Open a command prompt as an **Administrator** and run the command:  
 `git config --global credential.helper "store --file ~/.gitcredential"`
-3. Run `git config --list --show-origin` to view updates.
-	- verify that `.gitconfig` and `.gitcredentials` are stored in **C:\Users\\[USER_NAME]** 
+	- Run `git config --list --show-origin` to view updates.  
+	Verify that `.gitconfig` and `.gitcredentials` files are created in **C:\Users\\[USER_NAME]** 
 
+3. Run the windows batch script file **main.bat**
+	- Select **Option [1]** to view Git's current `user.email` and `user.config`
+	- Select **Option [2]** to edit the current `user.email` and `user.config`
+	- Select **Option [3]** to exit.
 
 20191026
