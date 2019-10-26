@@ -1,7 +1,7 @@
 # git-switcher
 
 >  Switch Git global account credentials from git config.  
->  Reset the git user's password.
+>  Reset the git user's password for GitHub, GitLab or BitBucket.
 
 
 ### Dependencies
@@ -31,13 +31,18 @@ Windows batch script to automate git user (view, edit and reset password) comman
 		- Click the **Windows Credentials** button
 		- Find and delete the entry for **github**, **gitlab**, or **bitbucket**
 	- Open a command prompt as an **Administrator** and run the command:  
-`git config --global credential.helper "store --file ~/.gitcredential"`
+`git config --global credential.helper "store --file ~/.gitcredential`
 	- Run `git config --list --show-origin` to view updates.  
 	Verify that `.gitconfig` and `.gitcredentials` files are created in **C:\Users\\[USER_NAME]** 
 
 3. Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privelage errors.
 	- Select **Option [1]** to **View** the current Git user's global `user.email` and `user.config`
 	- Select **Option [2]** to **Edit** the current global `user.email` and `user.config`
+		- You will be prompted for which Git version control provider would you like to reset the password.
+			- Select sub-option **[1]** for **GitHub**
+			- Select sub-option **[2]** for **GitLab**
+			- Select sub-option **[3]** for **BitBucket**
+			- Select sub-option **[4]** to **Exit**
 	- Select **Option [3]** to exit.
 	- Press **Ctrl + C** to exit any time.
 

@@ -124,7 +124,8 @@ EXIT /B 0
     GOTO ExitResetPassword
   ) else (
     echo %gitcredentials% was not found.
-    echo Make sure your windows User path is correct and try again.
+    echo Make sure your windows User path is correct and the file exists, then try again.
+    echo Read on the Usage instructions for more information.
     GOTO ProcessError
   )
 EXIT /B 0
