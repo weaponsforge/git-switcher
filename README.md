@@ -7,7 +7,7 @@
 
 1. Windows 10 OS 64-bit
 2. [Git Bash](https://gitforwindows.org/) for Windows
-	- version 2.11.0 was used for this tool
+	- version 2.33.0.windows.1 was used for this tool
 3. GitHub account
 
 
