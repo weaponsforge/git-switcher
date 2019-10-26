@@ -33,7 +33,7 @@ Windows batch script to automate git user (view, edit) commands.
 	- Run `git config --list --show-origin` to view updates.  
 	Verify that `.gitconfig` and `.gitcredentials` files are created in **C:\Users\\[USER_NAME]** 
 
-3. Run the windows batch script file **main.bat**
+3. Run the windows batch script file **main.bat** as an **Administrator.**
 	- Select **Option [1]** to view Git's current `user.email` and `user.config`
 	- Select **Option [2]** to edit the current `user.email` and `user.config`
 	- Select **Option [3]** to exit.
