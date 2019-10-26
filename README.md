@@ -35,7 +35,7 @@ Windows batch script to automate git user (view, edit and reset password) comman
 	- Run `git config --list --show-origin` to view updates.  
 	Verify that `.gitconfig` and `.gitcredentials` files are created in **C:\Users\\[USER_NAME]** 
 
-3. Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privelage errors.
+3. Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privilege errors.
 	- Select **Option [1]** to **View** the current Git user's global `user.email` and `user.config`
 	- Select **Option [2]** to **Edit** the current global `user.email` and `user.config`
 		- You will be prompted for which Git version control provider would you like to reset the password.
