@@ -1,6 +1,6 @@
 # git-switcher
 
->  Switch GitHub account credentials from git config.  
+>  Switch Git global account credentials from git config.  
 >  Reset the git user's password.
 
 
@@ -36,8 +36,8 @@ Windows batch script to automate git user (view, edit and reset password) comman
 	Verify that `.gitconfig` and `.gitcredentials` files are created in **C:\Users\\[USER_NAME]** 
 
 3. Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privelage errors.
-	- Select **Option [1]** to **View** Git's current `user.email` and `user.config`
-	- Select **Option [2]** to **Edit** the current `user.email` and `user.config`
+	- Select **Option [1]** to **View** the current Git user's global `user.email` and `user.config`
+	- Select **Option [2]** to **Edit** the current global `user.email` and `user.config`
 	- Select **Option [3]** to exit.
 	- Press **Ctrl + C** to exit any time.
 
