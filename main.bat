@@ -14,9 +14,18 @@ GOTO Main
   set "gitusername="
   set "email="
   set "doreset="
-  set "findstr="
+  set "findstring="
   set /A choice=1
   set /A gitrepository=4
+
+  :: Set git credentials file paths
+  set gitcredentials=C:\Users\%username%\.gitcredential
+  set newcredentials=C:\Users\%username%\.gitcredentialnew
+
+  :: Delete temporary file
+  if exist %newcredentials% (
+    del /f %newcredentials%
+  )
 
   cls
   echo ----------------------------------------------------------
@@ -82,9 +91,6 @@ EXIT /B 0
 :: Delete the password for the newly-set git user so it will be
 :: prompted on the next git operation
 :ResetPassword
-  set gitcredentials=C:\Users\%username%\.gitcredential
-  set newcredentials=C:\Users\%username%\.gitcredentialnew
-
   echo Which Git account password would you like to reset?
   echo [1] Github
   echo [2] Gitlab
@@ -93,34 +99,24 @@ EXIT /B 0
   set /p gitrepository="Select option:"
 
   (if %gitrepository% EQU 1 (
-    set findstr=@github.com
+    set findstring=@github.com
   ) else if %gitrepository% EQU 2 (
-    set findstr=@gitlab.com
+    set findstring=@gitlab.com
   ) else if %gitrepository% EQU 3 (
-    set findstr=@bitbucket.org
+    set findstring=@bitbucket.org
   ) else (
     GOTO Main
   ))
 
-  :: Delete temporary file
-  if exist %newcredentials% (
-    del /f %newcredentials%
-  )
-
   if exist %gitcredentials% (
-    (for /f "tokens=*" %%x in (%gitcredentials%) do (
-      @echo.%%x | findstr /C:%findstr%>nul && (
-        Echo found
+    @echo off findstr /C:%findstring% %gitcredentials%>nul && (
+      :: Copy all git credentials to temp file excluding the user to reset
+      type %gitcredentials% | findstr /v %findstring% >> %newcredentials%
 
-        :: Copy all git credentials to temp file  excluding the user to reset
-        type %gitcredentials% | findstr /v %findstr% >> %newcredentials%
-
-        :: Overwrite current git credentials to delete (reset) the new git config user's password
-        type %newcredentials% > %gitcredentials%
-        GOTO ExitResetPassword
-      )
-    ))
-
+      :: Overwrite current git credentials to delete (reset) the new git config user's password
+      type %newcredentials% > %gitcredentials%
+      GOTO ExitResetPassword
+    )
     GOTO ExitResetPassword
   ) else (
     echo %gitcredentials% was not found.
@@ -136,21 +132,29 @@ EXIT /B 0
   :: Delete temporary git credentials file
   if exist %newcredentials% (
     del /f %newcredentials% && (
-      echo|set /p=choice=Git user's %findstr% password has been reset...
-      GOTO ViewUserConfig
-    ) || (
-      set /p choice=Failed deleting temporary file.
+      echo Git user's %findstring% password has been reset.
       GOTO ProcessError
+    ) || (
+      echo Failed deleting temporary file.
+      echo Close this program and run again.
+      GOTO ProcessExit
     )
   ) else (
-    echo Password for user %gitusername% on %findstr% was not found.
+    echo Password for user %gitusername% on %findstring% was not found.
+    echo Nothing to reset.
     GOTO ProcessError
   )
 EXIT /B 0
 
 
-:: Process errors
+:: Process warning messages
 :ProcessError
   set /p choice=Press Enter to continue...
   GOTO Main
+EXIT /B 0
+
+
+:: Exit for critical errors
+:ProcessExit
+  set /p choice=Press Enter to continue...
 EXIT /B 0
