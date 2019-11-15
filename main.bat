@@ -109,13 +109,12 @@ EXIT /B 0
   ))
 
   if exist %gitcredentials% (
-    @echo off findstr /C:%findstring% %gitcredentials%>nul && (
+    echo | findstr /C:%findstring% %gitcredentials% > nul && (
       :: Copy all git credentials to temp file excluding the user to reset
       type %gitcredentials% | findstr /v %findstring% >> %newcredentials%
 
       :: Overwrite current git credentials to delete (reset) the new git config user's password
       type %newcredentials% > %gitcredentials%
-      GOTO ExitResetPassword
     )
     GOTO ExitResetPassword
   ) else (
