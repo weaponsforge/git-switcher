@@ -31,7 +31,7 @@ Configure your GitBash first with the following settings before using the script
 
 > ***WARNING:** These settings remove the Windows Credential Manager process handling for Git to a text-based ".gitcredentials" file from an easy-to-access location. Proceed at your discretion.*
 
-1. Open a command prompt as an ** Administrator**  and run the command:<br>
+1. Open a command prompt as an **Administrator**  and run the command:<br>
 `git config --global credential.helper "store --file ~/.gitcredential`
 2. Delete your **github** access credentials from the **Windows Credentials Manager**.
    - Search for **Credential Manager** from the Search box.
@@ -42,7 +42,7 @@ Configure your GitBash first with the following settings before using the script
 4. Step no.'s 1-3 have been tested for only **GitBash v2.33 - v2.36**. Do the following steps to ensure compatibility with GitBash versions higher than **v2.36+**.
 5. Create a backup of the GitBash `gitconfig` file, usually found in the location:<br>
 `C:\Program Files\Git\etc\gitconfig`
-6. Edit the `gitconfig` file. Delete the following lines and SAVE. (You may need Administrator access to edit the file).<br>
+6. Edit the **gitconfig** file. Delete the following lines and SAVE. (You may need Administrator access to edit the file).<br>
    ```
    [credential]
 	   helper = manager
