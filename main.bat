@@ -1,8 +1,8 @@
-::----------------------------------------------------------
+::-------------------------------------------------------------
 :: Change the git user.name and user.email
-:: Reset the user's git password
+:: Reset the user's git password from a ~/.gitcredential file
 :: weaponsforge;20191026
-::----------------------------------------------------------
+::-------------------------------------------------------------
 
 @echo off
 GOTO Main
@@ -76,7 +76,7 @@ EXIT /B 0
   echo ----------------------------------------------------------
   echo GIT USER CONFIG DETAILS (global)
   echo ----------------------------------------------------------
-  
+
   echo|set /p=Username:
   git config --get user.name
 
