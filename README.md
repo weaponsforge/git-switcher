@@ -20,13 +20,14 @@ Switches the Git global user account credentials and resets the git user's passw
 
 1. **main.bat**
    - Windows batch script to automate git user (view, edit and reset password) commands from a `~/.gitcredential` file.
-   - Follow the instructions for setting up Git Bash for usage with this script.
+   - Follow the instructions for setting up Git Bash for usage with this script at [GitBash Configuration with main.bat
+](#gitbash-configuration-with-mainbat).
 
       > **WARNING:** This method stores a Git user's password or Personal Access Token (PAT) in a `~/.gitcredential` plain-text file, which maybe unsafe. Consider using the **main-wincred.bat** script to ensure stricter Git account security using the Windows Credential Manager.
 
 2. **main-wincred.bat**
    - Windows batch script to automate git user (view, edit and reset password) commands from the Windows Credential Manager.
-   - Follow the instructions for setting up Git Bash for usage with this script.
+   - Follow the instructions for setting up Git Bash for usage with this script at [GitBash Configuration with main-wincred.bat](#gitbash-configuration-with-main-wincredbat).
 
 ## Installation
 
@@ -67,7 +68,7 @@ Configure your GitBash first with the following settings before using the script
 ### GitBash Configuration with `main-wincred.bat`
 
 1. GitBash requires no further setup when using the Windows Credential Manager for managing Git accounts.
-2. Undo the GitBash setup steps from [GitBash Configuration with `main.bat`](#gitBash-configuration-with-main.bat), if these steps were previously used.
+2. Undo the GitBash setup steps from [GitBash Configuration with `main.bat`](#gitbash-configuration-with-mainbat), if these steps were previously used.
 
 ## Usage
 
