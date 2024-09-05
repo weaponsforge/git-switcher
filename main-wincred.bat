@@ -13,8 +13,10 @@ GOTO Main
 :: Display the main menu
 :Main
   :: Clear the input variables
-  set "gitusername="
-  set "email="
+  set "GIT_PROVIDER="
+  set "GIT_USERNAME="
+  set "GIT_EMAIL="
+  set "GPG_KEY="
   set "doreset="
   set "targetname="
   set /A choice=1
@@ -46,11 +48,11 @@ EXIT /B 0
   echo EDIT GIT USER CONFIG DETAILS
   echo ----------------------------------------------------------
 
-  set /p gitusername="Enter git user.name:"
-  git config --global user.name %gitusername%
+  set /p GIT_USERNAME="Enter git user.name:"
+  git config --global user.name %GIT_USERNAME%
 
-  set /p email="Enter git user.email:"
-  git config --global user.email %email%
+  set /p GIT_EMAIL="Enter git user.email:"
+  git config --global user.email %GIT_EMAIL%
 
   echo Updated git user config...
   set /p doreset=Would you like to reset the password? [Y/n]:
