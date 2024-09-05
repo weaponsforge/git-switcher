@@ -5,6 +5,8 @@ The **git-switcher** repository contains Windows batch scripts that offer easy 
 - Windows Credential Manager using `main-wincred.bat`
 - A `~/.gitcredential` file using `main.bat`
 
+After a successful Git global account switch and password reset, subsequent Git pull/push/fetch will prompt for the Git user password or Personal Access Token (PAT).
+
 <br>
 
 **main-wincred.bat**
