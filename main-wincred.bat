@@ -6,6 +6,9 @@
 :: weaponsforge;20240905
 ::------------------------------------------------------------------------------
 
+:: Set the path to the .env file
+set "envFile=.env"
+
 @echo off
 GOTO Main
 
@@ -17,10 +20,13 @@ GOTO Main
   set "GIT_USERNAME="
   set "GIT_EMAIL="
   set "GPG_KEY="
+  set "READ_ERROR="
+
   set "doreset="
   set "targetname="
   set /A choice=1
   set /A gitrepository=4
+
 
   cls
   echo ----------------------------------------------------------
@@ -34,33 +40,57 @@ GOTO Main
   (if %choice% EQU 1 (
     GOTO ViewUserConfig
   ) else if %choice% EQU 2 (
-    GOTO SetUserConfig
+    GOTO PromptUserInput
   ) else if %choice% EQU 3 (
     EXIT /B 0
   ))
 EXIT /B 0
 
 
-:: Prompt for git config username and email
-:SetUserConfig
+:: Prompt for git config username and git provider
+:PromptUserInput
+  setlocal enabledelayedexpansion
+
   cls
   echo ----------------------------------------------------------
   echo EDIT GIT USER CONFIG DETAILS
   echo ----------------------------------------------------------
 
   set /p GIT_USERNAME="Enter git user.name:"
-  git config --global user.name %GIT_USERNAME%
 
-  set /p GIT_EMAIL="Enter git user.email:"
-  git config --global user.email %GIT_EMAIL%
+  echo.
+  echo Which Git account would you like to edit?
+  echo [1] Github
+  echo [2] Gitlab
+  echo [3] BitBucket
+  echo [4] Exit
+  set /p gitrepository="Select option:"
 
-  echo Updated git user config...
-  set /p doreset=Would you like to reset the password? [Y/n]:
-
-  echo.%doreset% | findstr /C:"Y">nul && (
-    GOTO ResetPassword
-  ) || (
+  (if %gitrepository% EQU 1 (
+    set targetname=git:https://github.com
+    set GIT_PROVIDER=github
+  ) else if %gitrepository% EQU 2 (
+    set targetname=git:https://gitlab.
+    set GIT_PROVIDER=gitlab
+  ) else if %gitrepository% EQU 3 (
+    set targetname=git:https://bitbucket.
+    set GIT_PROVIDER=bitbucket
+  ) else (
     GOTO Main
+  ))
+
+  :: Read user git data from file
+  CALL :ReadFile !GIT_PROVIDER! !GIT_USERNAME!
+
+  :: Set new git global user config and reset Win Credential Store data
+  :: if there are no errors reading the file
+  echo.!READ_ERROR! | findstr [A-Za-z]>nul && (
+    echo.
+    echo %READ_ERROR%
+    GOTO ProcessError
+  ) || (
+    CALL :ResetPassword
+    GOTO SetUserConfig
   )
 EXIT /B 0
 
@@ -72,53 +102,75 @@ EXIT /B 0
   echo GIT USER CONFIG DETAILS (global)
   echo ----------------------------------------------------------
 
-  echo|set /p=Username:
+  echo|set /p="Username: "
   git config --get user.name
 
-  echo|set /p=Email:
+  echo|set /p="Email: "
   git config --get user.email
 
+  echo.
   set /p choice=Press Enter to continue...
   GOTO Main
+EXIT /B 0
+
+
+:: Set the new git user config
+:: Unsets the global commit.signingkey if its not provided
+:SetUserConfig
+  git config --global user.name "%GIT_USERNAME%"
+  git config --global user.email "%GIT_EMAIL%"
+
+  echo.
+  echo [SUCCESS]: New global Git user config set.
+  GOTO ProcessError
 EXIT /B 0
 
 
 :: Delete the password for the newly-set git user so it will be
 :: prompted on the next git operation
 :ResetPassword
-  echo Which Git account password would you like to reset?
-  echo [1] Github
-  echo [2] Gitlab
-  echo [3] BitBucket
-  echo [4] Exit
-  set /p gitrepository="Select option:"
-
-  (if %gitrepository% EQU 1 (
-    set targetname=git:https://github.com
-  ) else if %gitrepository% EQU 2 (
-    set targetname=git:https://gitlab.com
-  ) else if %gitrepository% EQU 3 (
-    set targetname=git:https://bitbucket.org
-  ) else (
-    GOTO Main
-  ))
-
-  :: Delete Git credentials in the Windows Credential Manager
-  for /f "delims=" %%i in ('cmdKey /delete:%targetname% 2^>^&1') do set "output=%%i"
-
   echo.
-  echo %output%
+  set /p doreset=Would you like to reset the password? [Y/n]:
 
-  GOTO ExitResetPassword
+  if /i "%doreset%"=="Y" (
+    :: Delete Git credentials in the Windows Credential Manager
+    for /f "delims=" %%i in ('cmdKey /delete:%targetname% 2^>^&1') do set "output=%%i"
+
+    echo.
+    echo Deleting %targetname% in the Windows Credential Manager...
+    echo !output!
+
+    echo The Git credentials were successfully deleted from the
+    echo Windows Credential Manager, if they were present.
+  )
 EXIT /B 0
 
 
-:: Exit from the git reset password
-:ExitResetPassword
-  :: Delete temporary git credentials file
-  echo The Git credentials were successfully deleted from the
-  echo Windows Credential Manager, if they were present.
-  GOTO ProcessError
+:: Read user data from the .env
+:: @param 1: git provider name
+:: @param 2: git user name
+:ReadFile
+  set "USER_DATA_STRING="
+  set "READ_ERROR="
+  set "gitProvider=%~1"
+  set "gitUsername=%~2"
+
+  for /f "tokens=*" %%a in ('findstr /r "%gitProvider%|%gitUsername%|" "%envFile%"') do (
+    set USER_DATA_STRING="%%a"
+  )
+
+  if defined USER_DATA_STRING (
+    for /f "tokens=1,2,3,4 delims=|" %%c in (!USER_DATA_STRING!) do (
+      set GIT_EMAIL=%%e
+      set GIT_SIGNING_KEY=%%f
+    )
+
+    if "!GIT_EMAIL!"=="" (
+      set READ_ERROR=[ERROR]: git.email is undefined.
+    )
+  ) else (
+    set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined in the settings file.
+  )
 EXIT /B 0
 
 
