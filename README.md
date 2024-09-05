@@ -1,9 +1,15 @@
 # git-switcher
 
-Switches the Git global user account credentials and resets the git user's password for GitHub, GitLab, or BitBucket:
+The **git-switcher** repository contains Windows batch scripts that offer easy switching between different Git global user account credentials, resetting the Git user's password for GitHub, GitLab, or BitBucket using two (2) options:
 
-- from the Windows Credential Manager using `main-wincred.bat`.
-- from a `~/.gitcredential` file using `main.bat`.
+- Windows Credential Manager using `main-wincred.bat`
+- A `~/.gitcredential` file using `main.bat`
+
+<br>
+
+**main-wincred.bat**
+
+![git-switcher-anim](assets/git-switcher-anim.gif)
 
 
 ### Dependencies
@@ -14,10 +20,24 @@ Switches the Git global user account credentials and resets the git user's passw
 	- Installed using default options
 3. Git account
 	- GitHub, Gitlab, Bitbucket
+4. (Optional) Gpg4win [[link]](https://gitforwindows.org/)
+   - Installing Gpg4win and signing commits with a GPG key is optional.
+   - For reference, this project uses the following specs:
+      ```
+      KLEOPATRA
+      Kleopatra v3.2.2.231170 (Gpg4win-4.3.1)
+      KDE Frameworks v5.109.0
+      Qt v5.15.9 (built against 5.15.9)
 
+      GPG
+      (Installed with Kleopatra)
+      gpg (GnuPG) 2.4.5
+      libgcrypt 1.10.3
+      ```
 
 ## Table of Contents
 
+- [Dependencies](#dependencies)
 - [Content](#content)
 - [Installation](#installation)
 - [GitBash Configuration (Windows OS only)](#gitbash-configuration-windows-os-only)
@@ -43,7 +63,7 @@ Switches the Git global user account credentials and resets the git user's passw
 1. Clone this repository.<br>
 `git clone https://github.com/weaponsforge/git-switcher.git`
 
-2. Follow the GitBash Configuration Steps for `main.bat` or `main-wincred.bat` from the preceeding sub-sections.
+2. Follow the GitBash configuration steps for `main.bat` or `main-wincred.bat` from the preceeding sub-sections.
 
 3. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
 
@@ -81,7 +101,7 @@ Configure your GitBash first with the following settings before using the script
 
 ## Usage
 
-> **INFO:** `main-wincred.bat` requires Git user accounts data set in an `.env` file.
+> **INFO:** `main-wincred.bat` requires Git user accounts data set in a `.env` file.
 
 Click to run the windows batch script file **main-wincred.bat** or **main.bat**. You may need to run it as an **Administrator** if there will be privilege errors.
 
