@@ -1,7 +1,9 @@
 # git-switcher
 
->  Switches the Git global account credentials from a Git config file without resetting from the Windows Credentials Manager.<br>
->  Sets a git user and resets the git user's password for GitHub, GitLab, or BitBucket.
+Switches the Git global user account credentials and resets the git user's password for GitHub, GitLab, or BitBucket:
+
+- from the Windows Credential Manager using `main-wincred.bat`.
+- from a `~/.gitcredential` file using `main.bat`.
 
 
 ### Dependencies
@@ -16,16 +18,28 @@
 
 ## Content
 
-1. **main.bat**  
-Windows batch script to automate git user (view, edit and reset password) commands.
+1. **main.bat**
+   - Windows batch script to automate git user (view, edit and reset password) commands from a `~/.gitcredential` file.
+   - Follow the instructions for setting up Git Bash for usage with this script.
+
+      > **WARNING:** This method stores a Git user's password or Personal Access Token (PAT) in a `~/.gitcredential` plain-text file, which maybe unsafe. Consider using the **main-wincred.bat** script to ensure stricter Git account security.
+
+2. **main-wincred.bat**
+   - Windows batch script to automate git user (view, edit and reset password) commands from the Windows Credential Manager.
+   - Follow the instructions for setting up Git Bash for usage with this script.
 
 ## Installation
 
-1. Clone this repository.  
+1. Clone this repository.<br>
 `git clone https://github.com/weaponsforge/git-switcher.git`
-2. Follow the GitBash configuration steps from the preceeding sub-section.
 
-### GitBash Configuration (Windows OS only)
+2. Follow the GitBash Configuration Steps for `main.bat` or `main-wincred.bat` from the preceeding sub-sections.
+
+3. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
+
+## GitBash Configuration (Windows OS only)
+
+### GitBash Configuration with `main.bat`
 
 Configure your GitBash first with the following settings before using the script.
 
@@ -50,7 +64,12 @@ Configure your GitBash first with the following settings before using the script
    - Restore the deleted lines anytime as needed.
    - Take note the git-switcher script will not work after restoring the deleted lines.
 
-## Usage 
+### GitBash Configuration with `main-wincred.bat`
+
+1. GitBash requires no further setup when using the Windows Credential Manager for managing Git accounts.
+2. Undo the GitBash setup steps from [GitBash Configuration with `main.bat`](#gitBash-configuration-with-main.bat), if these steps were previously used.
+
+## Usage
 
 Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privilege errors.
 
