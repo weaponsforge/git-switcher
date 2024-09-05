@@ -63,9 +63,19 @@ The **git-switcher** repository contains Windows batch scripts that offer easy 
 1. Clone this repository.<br>
 `git clone https://github.com/weaponsforge/git-switcher.git`
 
-2. Follow the GitBash configuration steps for `main.bat` or `main-wincred.bat` from the preceeding sub-sections.
+2. Select a Windows batch script to use: `main.bat` or `main-wincred.bat`.
+   - Follow the GitBash Configuration Steps for from the preceeding sub-sections for a selected script.
 
-3. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
+3. Create a `.env` file following the pipe-delimited content format of the `.env.example` file to use with the **main-wincred.bat**. Replace its variables with actual values corresponding to Git accounts that you have access to. Create entries per line as many as needed.
+
+   | Key | Description |
+   | --- | --- |
+   | GIT_PROVIDER | Online Git provider. Possible values are: `github`, `gitlab` and `bitbucket` |
+   | GIT_USERNAME | Git user name associated with the `GIT_PROVIDER` |
+   | GIT_EMAIL | User email associated with the `GIT_USERNAME` |
+   | GPG_KEY | (Optional) GPG signing key linked with the Git account.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
+
+4. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
 
 ## GitBash Configuration (Windows OS only)
 
