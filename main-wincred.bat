@@ -108,6 +108,9 @@ EXIT /B 0
   echo|set /p="Email: "
   git config --get user.email
 
+  echo|set /p="GPG Key: "
+  git config --get user.signingkey
+
   echo.
   set /p choice=Press Enter to continue...
   GOTO Main
@@ -119,6 +122,21 @@ EXIT /B 0
 :SetUserConfig
   git config --global user.name "%GIT_USERNAME%"
   git config --global user.email "%GIT_EMAIL%"
+
+  if defined GIT_SIGNING_KEY (
+    git config --global user.signingkey %GIT_SIGNING_KEY%!
+
+    :: Check if gpg is available
+    where gpg >nul 2>&1
+    if !errorlevel! == 0 (
+      git config --global commit.gpgsign true
+    ) else (
+      echo [INFO]: gpg program not found. Skipping commit.gpgsign configuration.
+    )
+  ) else (
+    git config --global --unset user.signingkey
+    git config --global --unset commit.gpgsign
+  )
 
   echo.
   echo [SUCCESS]: New global Git user config set.
@@ -169,7 +187,7 @@ EXIT /B 0
       set READ_ERROR=[ERROR]: git.email is undefined.
     )
   ) else (
-    set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined in the settings file.
+    set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
   )
 EXIT /B 0
 
