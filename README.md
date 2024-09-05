@@ -16,6 +16,15 @@ Switches the Git global user account credentials and resets the git user's passw
 	- GitHub, Gitlab, Bitbucket
 
 
+## Table of Contents
+
+- [Content](#content)
+- [Installation](#installation)
+- [GitBash Configuration (Windows OS only)](#gitbash-configuration-windows-os-only)
+   - [GitBash Configuration with `main.bat`](#gitbash-configuration-with-mainbat)
+   - [GitBash Configuration with `main-wincred.bat`](#gitbash-configuration-with-main-wincredbat)
+- [Usage](#usage)
+
 ## Content
 
 1. **main.bat**
@@ -72,9 +81,12 @@ Configure your GitBash first with the following settings before using the script
 
 ## Usage
 
-Click to run the windows batch script file **main.bat**. You may need to run it as an **Administrator** if there will be privilege errors.
+> **INFO:** `main-wincred.bat` requires Git user accounts data set in an `.env` file.
+
+Click to run the windows batch script file **main-wincred.bat** or **main.bat**. You may need to run it as an **Administrator** if there will be privilege errors.
 
 1. Select **Option [1]** to **View** the current Git user's global `user.email` and `user.config`.
+   - **main-wincred.bat** will also display the `user.signingkey`
 2. Select **Option [2]** to **Edit** the current global `user.email` and `user.config`.<br>You will be prompted for which Git version control provider would you like to reset the password.
    - Select sub-option **[1]** for **GitHub**.
    - Select sub-option **[2]** for **GitLab**
