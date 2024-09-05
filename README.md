@@ -64,7 +64,7 @@ The **git-switcher** repository contains Windows batch scripts that offer easy 
 `git clone https://github.com/weaponsforge/git-switcher.git`
 
 2. Select a Windows batch script to use: `main.bat` or `main-wincred.bat`.
-   - Follow the GitBash Configuration Steps for from the preceeding sub-sections for a selected script.
+   - Follow the GitBash Configuration Steps from the preceding sub-sections for a selected script.
 
 3. Create a `.env` file following the pipe-delimited content format of the `.env.example` file to use with the **main-wincred.bat**. Replace its variables with actual values corresponding to Git accounts that you have access to. Create entries per line as many as needed.
 
