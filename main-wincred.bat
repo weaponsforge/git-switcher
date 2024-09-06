@@ -10,7 +10,20 @@
 set "envFile=.env"
 
 @echo off
-GOTO Main
+GOTO Init
+
+
+:: Check for required software (Git)
+:Init
+  CALL :CheckInstalled git
+
+  if %errorlevel%==0 (
+    GOTO Main
+  ) else (
+    echo [ERROR]: GitBash is required to run this script.
+    pause
+  )
+EXIT /B 0
 
 
 :: Display the main menu
@@ -24,9 +37,9 @@ GOTO Main
 
   set "doreset="
   set "targetname="
+  set /A isInstalled=0
   set /A choice=1
   set /A gitrepository=4
-
 
   cls
   echo ----------------------------------------------------------
@@ -127,8 +140,9 @@ EXIT /B 0
     git config --global user.signingkey %GIT_SIGNING_KEY%!
 
     :: Check if gpg is available
-    where gpg >nul 2>&1
-    if !errorlevel! == 0 (
+    CALL :CheckInstalled gpg
+
+    if !errorlevel!==0 (
       git config --global commit.gpgsign true
     ) else (
       echo [INFO]: gpg program not found. Skipping commit.gpgsign configuration.
@@ -188,6 +202,23 @@ EXIT /B 0
     )
   ) else (
     set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
+  )
+EXIT /B 0
+
+
+:: Checks if program is installed
+:: Sets the global system variable errorlevel=0 if a program is installed, else 1
+:: @param 1: executable program name
+:CheckInstalled
+  set "program=%~1"
+  where %program% >nul 2>&1
+
+  if %errorlevel% == 0 (
+    echo [INFO]: %program% IS installed
+    EXIT /B 0
+  ) else (
+    echo [INFO]: %program% not installed
+    EXIT /B 1
   )
 EXIT /B 0
 
