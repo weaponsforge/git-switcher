@@ -83,10 +83,10 @@ EXIT /B 0
     set targetname=git:https://github.com
     set GIT_PROVIDER=github
   ) else if %gitrepository% EQU 2 (
-    set targetname=git:https://gitlab.
+    set targetname=git:https://gitlab.com
     set GIT_PROVIDER=gitlab
   ) else if %gitrepository% EQU 3 (
-    set targetname=git:https://bitbucket.
+    set targetname=git:https://bitbucket.org
     set GIT_PROVIDER=bitbucket
   ) else (
     GOTO Main
