@@ -244,7 +244,7 @@ EXIT /B 0
   set "gitUsername=%~2"
   set hasError=false
 
-  for /f "tokens=*" %%a in ('findstr /r "^%gitProvider%|%gitUsername%|" "%envFile%"') do (
+  for /f "tokens=*" %%a in ('findstr /r "^%gitProvider%|%gitUsername%" "%envFile%"') do (
     set USER_DATA_STRING="%%a"
   )
 
@@ -256,7 +256,7 @@ EXIT /B 0
     )
 
     if "!GIT_EMAIL!"=="" (
-      echo [ERROR]: git.email is undefined.
+      echo [ERROR]: git.email is required.
       set hasError=true
     )
 
