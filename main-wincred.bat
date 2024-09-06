@@ -17,12 +17,14 @@ GOTO Init
   set "LOCAL_GIT_PROVIDER="
   set "envFile=.env"
 
+  :: Check required software
   CALL :CheckInstalled git
+  CALL :CheckInstalled cmdKey
 
   if %errorlevel%==0 (
     GOTO Main
   ) else (
-    echo [ERROR]: GitBash is required to run this script.
+    echo [ERROR]: GitBash and Windows Credential Manager are required to run this script.
     pause
   )
 EXIT /B 0
