@@ -42,7 +42,7 @@ After a successful Git global account switch and password reset using `main.bat`
 ## Table of Contents
 
 - [Dependencies](#dependencies)
-- [Scripts](#content)
+- [Scripts](#scripts)
    - [`main.bat`](#mainbat)
    - [`main-wincred.bat`](#main-wincredbat)
 - [Installation](#installation)
