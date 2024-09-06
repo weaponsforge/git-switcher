@@ -177,19 +177,21 @@ EXIT /B 0
   git config --global user.email "%GIT_EMAIL%"
 
   if defined GIT_SIGNING_KEY (
-    git config --global user.signingkey %GIT_SIGNING_KEY%!
-
     :: Check if gpg is available
     CALL :CheckInstalled gpg
 
     if !errorlevel!==0 (
+      git config --global user.signingkey %GIT_SIGNING_KEY%!
       git config --global commit.gpgsign true
+      echo [INFO]: Setting the global git signing key and commit settings.
     ) else (
       echo [INFO]: gpg program not found. Skipping commit.gpgsign configuration.
     )
   ) else (
     git config --global --unset user.signingkey
     git config --global --unset commit.gpgsign
+    echo [INFO]: GPG signing key not defined.
+    echo [INFO]: Resetting global git signing key and commit settings.
   )
 
   CALL :WriteUserPreference
@@ -270,6 +272,11 @@ EXIT /B 0
   ) else (
     echo [ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
     set hasError=true
+  )
+
+  :: Reset the GIT_SIGNING_KEY if its value is "-"
+  if "%GIT_SIGNING_KEY%"=="-" (
+    set "GIT_SIGNING_KEY="
   )
 
   :: Set the errorlevel system variable to 1

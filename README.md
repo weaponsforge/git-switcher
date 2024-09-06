@@ -83,7 +83,7 @@ After a successful Git global account switch and password reset using `main.bat`
    | GIT_PROVIDER | Online Git provider. Currently, supported providers or platforms are [GitHub](https://github.com/), [GitLab](https://gitlab.com/), and [BitBucket](https://bitbucket.org/).<br>Accepted values are `github` (for GitHub), `gitlab` (for GitLab), and `bitbucket` (for BitBucket). |
    | GIT_USERNAME | Git user name associated with the `GIT_PROVIDER` |
    | GIT_EMAIL | User email associated with the `GIT_USERNAME` |
-   | GPG_KEY | (Optional) GPG key linked with the Git account for signing commits.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
+   | GPG_KEY | (Optional) GPG key linked with the Git account for signing commits.<br>If no GPG keys are set but there's a Personal Access Token (PAT), set its value to a hyphen `"-"`.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
    | PERSONAL_ACCESS_TOKEN | (Optional) Git account's Personal Access Token (PAT)<br><br><blockquote>The **main-wincred.bat** script will set the generic target and password in the Windows Credential Manager if this value is provided. Succeeding Git `pull/push/fetch` will no longer prompt for the Git user password or Personal Access Token (PAT).</blockquote> |
 
    Example `.env` file:
