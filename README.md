@@ -24,7 +24,7 @@ After a successful Git global account switch and password reset using `main.bat`
 	- Installed using default options
 3. Git account
 	- GitHub, Gitlab, Bitbucket
-4. (Optional) Gpg4win [[link]](https://gitforwindows.org/)
+4. (Optional) Gpg4win [[link]](https://www.gpg4win.org/)
    - Installing Gpg4win and signing commits with a GPG key is optional.
    - For reference, this project uses the following specs:
       ```
