@@ -6,15 +6,17 @@
 :: weaponsforge;20240905
 ::------------------------------------------------------------------------------
 
-:: Set the path to the .env file
-set "envFile=.env"
-
 @echo off
 GOTO Init
 
 
 :: Check for required software (Git)
 :Init
+  :: Local temporary files
+  set "LOCAL_SETTINGS_FILE=.settings"
+  set "LOCAL_GIT_PROVIDER="
+  set "envFile=.env"
+
   CALL :CheckInstalled git
 
   if %errorlevel%==0 (
@@ -40,6 +42,8 @@ EXIT /B 0
   set /A isInstalled=0
   set /A choice=1
   set /A gitrepository=4
+
+  CALL :ReadUserPreferenceFile
 
   cls
   echo ----------------------------------------------------------
@@ -115,6 +119,8 @@ EXIT /B 0
   echo GIT USER CONFIG DETAILS (global)
   echo ----------------------------------------------------------
 
+  echo Git Provider: %LOCAL_GIT_PROVIDER%
+
   echo|set /p="Username: "
   git config --get user.name
 
@@ -124,9 +130,27 @@ EXIT /B 0
   echo|set /p="GPG Key: "
   git config --get user.signingkey
 
+  if "%LOCAL_GIT_PROVIDER%" NEQ "not yet set" (
+    CALL :ViewWinCredConfig
+  )
+
   echo.
   set /p choice=Press Enter to continue...
   GOTO Main
+EXIT /B 0
+
+
+:: Log the Windows Credential information of the active Git target
+:ViewWinCredConfig
+  (if "%LOCAL_GIT_PROVIDER%"=="github" (
+    set targetname=git:https://github.com
+  ) else if "%LOCAL_GIT_PROVIDER%"=="gitlab" (
+    set targetname=git:https://gitlab.com
+  ) else if "%LOCAL_GIT_PROVIDER%"=="bitbucket" (
+    set targetname=git:https://bitbucket.org
+  ))
+
+  cmdKey /list:%targetname%
 EXIT /B 0
 
 
@@ -151,6 +175,8 @@ EXIT /B 0
     git config --global --unset user.signingkey
     git config --global --unset commit.gpgsign
   )
+
+  CALL :WriteUserPreference
 
   echo.
   echo [SUCCESS]: New global Git user config set.
@@ -203,6 +229,37 @@ EXIT /B 0
   ) else (
     set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
   )
+EXIT /B 0
+
+
+:: Reads the local LOCAL_SETTINGS_FILE user-preference file into variables
+:ReadUserPreferenceFile
+  if exist %LOCAL_SETTINGS_FILE% (
+    for /f "tokens=1,2 delims==" %%a in (%LOCAL_SETTINGS_FILE%) do (
+      if "%%a"=="GIT_PROVIDER" (
+        set LOCAL_GIT_PROVIDER=%%b
+      )
+    )
+  ) else (
+    set LOCAL_GIT_PROVIDER=not yet set
+  )
+EXIT /B 0
+
+
+:: Writes new user-preference values to the LOCAL_SETTINGS_FILE file
+:WriteUserPreference
+  set hasblank=false
+  if "%GIT_PROVIDER%"=="" set hasblank=true
+
+  if %hasblank% == true (
+    EXIT /B 0
+  )
+
+  if exist %LOCAL_SETTINGS_FILE% (
+    del %LOCAL_SETTINGS_FILE%
+  )
+
+  echo GIT_PROVIDER=%GIT_PROVIDER%>>%LOCAL_SETTINGS_FILE%
 EXIT /B 0
 
 
