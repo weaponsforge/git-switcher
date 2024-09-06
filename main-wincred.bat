@@ -1,8 +1,11 @@
 ::------------------------------------------------------------------------------
-:: Change the git user.name and user.email
-:: Deletes the user's git password from the Windows Credential Manager.
-:: Succeeding git fetch/pull/push will prompt for the user's Git password or
-::   Personal Access Token (PAT), storing it in the Windows Credential Manager
+:: Upddates the global git user.name and user.email.
+:: Manages git target credentials in the Windows Credential Manager:
+:: - Deletes the user's active git password
+:: - Sets the new git target with Personal Access Token (PAT)
+::
+:: Succeeding git fetch/pull/push will not prompt for the user's Git password or
+::   Personal Access Token, since its stored in the Windows Credential Manager
 :: weaponsforge;20240905
 ::------------------------------------------------------------------------------
 
@@ -36,8 +39,8 @@ EXIT /B 0
   set "GIT_PROVIDER="
   set "GIT_USERNAME="
   set "GIT_EMAIL="
+  set "PERSONAL_ACCESS_TOKEN="
   set "GPG_KEY="
-  set "READ_ERROR="
 
   set "doreset="
   set "targetname="
@@ -103,13 +106,24 @@ EXIT /B 0
 
   :: Set new git global user config and reset Win Credential Store data
   :: if there are no errors reading the file
-  echo.!READ_ERROR! | findstr [A-Za-z]>nul && (
-    echo.
-    echo %READ_ERROR%
+  if %errorlevel% == 1 (
     GOTO ProcessError
-  ) || (
+  ) else (
     CALL :ResetPassword
-    GOTO SetUserConfig
+
+    :: Set the password in Windows Credential Manager if its present in the .env file
+    if defined PERSONAL_ACCESS_TOKEN (
+      CALL :SetPassword
+    ) else (
+      echo [INFO]: Personal Access Token not detected. Skipping set password...
+    )
+
+    if !errorlevel! == 0 (
+      GOTO SetUserConfig
+    ) else (
+      pause
+      GOTO Main
+    )
   )
 EXIT /B 0
 
@@ -163,19 +177,21 @@ EXIT /B 0
   git config --global user.email "%GIT_EMAIL%"
 
   if defined GIT_SIGNING_KEY (
-    git config --global user.signingkey %GIT_SIGNING_KEY%!
-
     :: Check if gpg is available
     CALL :CheckInstalled gpg
 
     if !errorlevel!==0 (
+      git config --global user.signingkey %GIT_SIGNING_KEY%!
       git config --global commit.gpgsign true
+      echo [INFO]: Setting the global git signing key and commit settings.
     ) else (
       echo [INFO]: gpg program not found. Skipping commit.gpgsign configuration.
     )
   ) else (
     git config --global --unset user.signingkey
     git config --global --unset commit.gpgsign
+    echo [INFO]: GPG signing key not defined.
+    echo [INFO]: Resetting global git signing key and commit settings.
   )
 
   CALL :WriteUserPreference
@@ -186,8 +202,8 @@ EXIT /B 0
 EXIT /B 0
 
 
-:: Delete the password for the newly-set git user so it will be
-:: prompted on the next git operation
+:: Deletes the password in the Windows Credential Manager
+:: for the newly-set git user so it will be prompted on the next git operation
 :ResetPassword
   echo.
   set /p doreset=Would you like to reset the password? [Y/n]:
@@ -206,30 +222,66 @@ EXIT /B 0
 EXIT /B 0
 
 
+:: Sets a new target entry with password in the Windows Credential Manager
+:SetPassword
+  cmdKey /generic:%targetname% /user:%GIT_USERNAME% /pass:%PERSONAL_ACCESS_TOKEN%
+
+ :: Check if the command failed
+  if errorlevel 1 (
+    echo [ERROR]: Credentials not set in Windows Credential Manager.
+    EXIT /B 1
+  ) else (
+    echo [SUCCESS]: New Git credentials set in Windows Credential Manager.
+  )
+EXIT /B 0
+
+
 :: Read user data from the .env
 :: @param 1: git provider name
 :: @param 2: git user name
+:: @returns: Sets the global system variable errorlevel=1 on file reading errors, else 0
 :ReadFile
   set "USER_DATA_STRING="
-  set "READ_ERROR="
   set "gitProvider=%~1"
   set "gitUsername=%~2"
+  set hasError=false
 
-  for /f "tokens=*" %%a in ('findstr /r "^%gitProvider%|%gitUsername%|" "%envFile%"') do (
+  for /f "tokens=*" %%a in ('findstr /r "^%gitProvider%|%gitUsername%" "%envFile%"') do (
     set USER_DATA_STRING="%%a"
   )
 
   if defined USER_DATA_STRING (
-    for /f "tokens=1,2,3,4 delims=|" %%c in (!USER_DATA_STRING!) do (
+    for /f "tokens=1,2,3,4,5 delims=|" %%c in (!USER_DATA_STRING!) do (
       set GIT_EMAIL=%%e
       set GIT_SIGNING_KEY=%%f
+      set PERSONAL_ACCESS_TOKEN=%%g
     )
 
     if "!GIT_EMAIL!"=="" (
-      set READ_ERROR=[ERROR]: git.email is undefined.
+      echo [ERROR]: git.email is required.
+      set hasError=true
+    )
+
+    if "!GIT_SIGNING_KEY!"=="" (
+      echo [WARNING]: git.signingkey is undefined.
+    )
+
+    if "!PERSONAL_ACCESS_TOKEN!"=="" (
+      echo [WARNING]: Personal Access Token is undefined.
     )
   ) else (
-    set READ_ERROR=[ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
+    echo [ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
+    set hasError=true
+  )
+
+  :: Reset the GIT_SIGNING_KEY if its value is "-"
+  if "%GIT_SIGNING_KEY%"=="-" (
+    set "GIT_SIGNING_KEY="
+  )
+
+  :: Set the errorlevel system variable to 1
+  if %hasError% == true (
+    EXIT /B 1
   )
 EXIT /B 0
 
@@ -266,8 +318,8 @@ EXIT /B 0
 
 
 :: Checks if program is installed
-:: Sets the global system variable errorlevel=0 if a program is installed, else 1
 :: @param 1: executable program name
+:: @returns: Sets the global system variable errorlevel=0 if a program is installed, else 1
 :CheckInstalled
   set "program=%~1"
   where %program% >nul 2>&1

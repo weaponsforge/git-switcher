@@ -5,7 +5,9 @@ The **git-switcher** repository contains Windows batch scripts that offer easy 
 - Windows Credential Manager using `main-wincred.bat`
 - A `~/.gitcredential` file using `main.bat`
 
-After a successful Git global account switch and password reset, subsequent Git pull/push/fetch will prompt for the Git user password or Personal Access Token (PAT).
+After a successful Git global account switch and password reset using `main.bat`, subsequent Git pull/push/fetch will prompt for the Git user password or Personal Access Token (PAT).
+
+> Subsequent Git pull/push/fetch will NOT prompt for the Git user password or Personal Access Token (PAT) if this token is provided in the `.env` file when using the `main-wincred.bat` script.
 
 <br>
 
@@ -40,25 +42,31 @@ After a successful Git global account switch and password reset, subsequent Git 
 ## Table of Contents
 
 - [Dependencies](#dependencies)
-- [Content](#content)
+- [Scripts](#scripts)
+   - [`main.bat`](#mainbat)
+   - [`main-wincred.bat`](#main-wincredbat)
 - [Installation](#installation)
 - [GitBash Configuration (Windows OS only)](#gitbash-configuration-windows-os-only)
    - [GitBash Configuration with `main.bat`](#gitbash-configuration-with-mainbat)
    - [GitBash Configuration with `main-wincred.bat`](#gitbash-configuration-with-main-wincredbat)
 - [Usage](#usage)
 
-## Content
+## Scripts
 
-1. **main.bat**
-   - Windows batch script to automate git user (view, edit and reset password) commands from a `~/.gitcredential` file.
+### **main.bat**
+   - Windows batch script to automate git user (view, edit, and reset password) commands from a `~/.gitcredential` file.
+   - This script only sets the global git user name and email.
    - Follow the instructions for setting up Git Bash for usage with this script at [GitBash Configuration with main.bat
 ](#gitbash-configuration-with-mainbat).
 
-      > **WARNING:** This script stores a Git user's password or Personal Access Token (PAT) in a `~/.gitcredential` plain-text file, which maybe unsafe. Consider using the **main-wincred.bat** script to ensure stricter Git account security using the Windows Credential Manager.
+      > _**WARNING:** This script stores a Git user's password or Personal Access Token (PAT) in a `~/.gitcredential` plain-text file, which may be unsafe. Consider using the **main-wincred.bat** script to ensure stricter Git account security using the Windows Credential Manager._
 
-2. **main-wincred.bat**
-   - Windows batch script to automate git user (view, edit and reset password) commands from the Windows Credential Manager.
+### **main-wincred.bat**
+   - Windows batch script to automate git user (view, edit, and reset password) commands from the **Windows Credential Manager**.
+   - Aside from setting the global git user name and email, this script also has options for setting the global git GPG signing key and automatically setting the Git user's Personal Access Token (PAT) in the Windows Credential Manager from the `.env` file.
    - Follow the instructions for setting up Git Bash for usage with this script at [GitBash Configuration with main-wincred.bat](#gitbash-configuration-with-main-wincredbat).
+
+      > **INFO** This script requires Git user account information in a `.env` file. Check out the required and optional keys and structure format of the `.env` file in the [Installation](#installation) section.
 
 ## Installation
 
@@ -72,10 +80,19 @@ After a successful Git global account switch and password reset, subsequent Git 
 
    | Key | Description |
    | --- | --- |
-   | GIT_PROVIDER | Online Git provider. Possible values are: `github`, `gitlab` and `bitbucket` |
+   | GIT_PROVIDER | Online Git provider. Currently, supported providers or platforms are [GitHub](https://github.com/), [GitLab](https://gitlab.com/), and [BitBucket](https://bitbucket.org/).<br>Accepted values are `github` (for GitHub), `gitlab` (for GitLab), and `bitbucket` (for BitBucket). |
    | GIT_USERNAME | Git user name associated with the `GIT_PROVIDER` |
    | GIT_EMAIL | User email associated with the `GIT_USERNAME` |
-   | GPG_KEY | (Optional) GPG signing key linked with the Git account.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
+   | GPG_KEY | (Optional) GPG key linked with the Git account for signing commits.<br>If no GPG keys are set but there's a Personal Access Token (PAT), set its value to a hyphen `"-"`.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
+   | PERSONAL_ACCESS_TOKEN | (Optional) Git account's Personal Access Token (PAT)<br><br><blockquote>The **main-wincred.bat** script will set the generic target and password in the Windows Credential Manager if this value is provided. Succeeding Git `pull/push/fetch` will no longer prompt for the Git user password or Personal Access Token (PAT).</blockquote> |
+
+   Example `.env` file:
+   ```
+   github|myaccount|hello@gmail.com|12345|86473212
+   github|mysecond|second@gmail.com|45678
+   gitlab|worldtest
+   bitbucket|myother|other@gmail.com
+   ```
 
 4. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
 
