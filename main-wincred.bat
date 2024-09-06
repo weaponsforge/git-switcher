@@ -215,7 +215,7 @@ EXIT /B 0
   set "gitProvider=%~1"
   set "gitUsername=%~2"
 
-  for /f "tokens=*" %%a in ('findstr /r "%gitProvider%|%gitUsername%|" "%envFile%"') do (
+  for /f "tokens=*" %%a in ('findstr /r "^%gitProvider%|%gitUsername%|" "%envFile%"') do (
     set USER_DATA_STRING="%%a"
   )
 
