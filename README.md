@@ -91,6 +91,7 @@ After a successful Git global account switch and password reset using `main.bat`
    github|myaccount|hello@gmail.com|12345|86473212
    github|mysecond|second@gmail.com|45678
    gitlab|worldtest
+   gitlab|tester|testing@gmail.com|-|22222222
    bitbucket|myother|other@gmail.com
    ```
 
