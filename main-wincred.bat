@@ -110,7 +110,13 @@ EXIT /B 0
     GOTO ProcessError
   ) else (
     CALL :ResetPassword
-    CALL :SetPassword
+
+    :: Set the password in Windows Credential Manager if its present in the .env file
+    if defined PERSONAL_ACCESS_TOKEN (
+      CALL :SetPassword
+    ) else (
+      echo [INFO]: Personal Access Token not detected. Skipping set password...
+    )
 
     if !errorlevel! == 0 (
       GOTO SetUserConfig
@@ -216,9 +222,6 @@ EXIT /B 0
 
 :: Sets a new target entry with password in the Windows Credential Manager
 :SetPassword
-  set "errorOutput="
-  set "output="
-
   cmdKey /generic:%targetname% /user:%GIT_USERNAME% /pass:%PERSONAL_ACCESS_TOKEN%
 
  :: Check if the command failed
@@ -258,13 +261,11 @@ EXIT /B 0
     )
 
     if "!GIT_SIGNING_KEY!"=="" (
-      echo [ERROR]: git.signingkey is undefined.
-      set hasError=true
+      echo [WARNING]: git.signingkey is undefined.
     )
 
     if "!PERSONAL_ACCESS_TOKEN!"=="" (
-      echo [ERROR]: Personal Access Token is undefined.
-      set hasError=true
+      echo [WARNING]: Personal Access Token is undefined.
     )
   ) else (
     echo [ERROR]: %gitProvider%/%gitUsername% - undefined Git account in the settings file.
