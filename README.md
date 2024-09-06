@@ -76,6 +76,7 @@ After a successful Git global account switch and password reset, subsequent Git 
    | GIT_USERNAME | Git user name associated with the `GIT_PROVIDER` |
    | GIT_EMAIL | User email associated with the `GIT_USERNAME` |
    | GPG_KEY | (Optional) GPG signing key linked with the Git account.<br><br><blockquote>**INFO:** This option requires a GPG key linked and set-up with the Git account using the [Gpg4win](https://www.gpg4win.org/) software.</blockquote> |
+   | PERSONAL_ACCESS_TOKEN | Git account's Personal Access Token (PAT) |
 
 4. Read the [Usage](#usage) section for reference on using the scripts after setting up GitBash from step **# 2**.
 
