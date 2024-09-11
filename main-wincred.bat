@@ -20,11 +20,16 @@ GOTO Init
   set "LOCAL_GIT_PROVIDER="
   set "envFile=.env"
 
+  set /A errorCount=0
+
   :: Check required software
   CALL :CheckInstalled git
-  CALL :CheckInstalled cmdKey
+  set /A errCount += %errorlevel%
 
-  if %errorlevel%==0 (
+  CALL :CheckInstalled cmdKey
+  set /A errCount += %errorlevel%
+
+  if %errCount%==0 (
     GOTO Main
   ) else (
     echo [ERROR]: GitBash and Windows Credential Manager are required to run this script.
