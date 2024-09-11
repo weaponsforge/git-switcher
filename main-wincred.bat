@@ -20,6 +20,14 @@ GOTO Init
   set "LOCAL_GIT_PROVIDER="
   set "envFile=.env"
 
+  :: Constants
+  set TARGET_GITHUB=git:https://github.com
+  set TARGET_GITLAB=git:https://gitlab.com
+  set TARGET_BITBUCKET=git:https://bitbucket.org
+  set PLAT_GITHUB=github
+  set PLAT_GITLAB=gitlab
+  set PLAT_BITBUCKET=bitbucket
+
   set /A errorCount=0
 
   :: Check required software
@@ -94,20 +102,17 @@ EXIT /B 0
   set /p gitrepository="Select option:"
 
   (if %gitrepository% EQU 1 (
-    set targetname=git:https://github.com
-    set GIT_PROVIDER=github
+    CALL :SetWinCredTarget %PLAT_GITHUB%
   ) else if %gitrepository% EQU 2 (
-    set targetname=git:https://gitlab.com
-    set GIT_PROVIDER=gitlab
+    CALL :SetWinCredTarget %PLAT_GITLAB%
   ) else if %gitrepository% EQU 3 (
-    set targetname=git:https://bitbucket.org
-    set GIT_PROVIDER=bitbucket
+    CALL :SetWinCredTarget %PLAT_BITBUCKET%
   ) else (
     GOTO Main
   ))
 
   :: Read user git data from file
-  CALL :ReadFile !GIT_PROVIDER! !GIT_USERNAME!
+  CALL :ReadFile %GIT_PROVIDER% %GIT_USERNAME%
 
   :: Set new git global user config and reset Win Credential Store data
   :: if there are no errors reading the file
@@ -161,16 +166,8 @@ EXIT /B 0
 EXIT /B 0
 
 
-:: Log the Windows Credential information of the active Git target
+:: Logs the Windows Credential information of the active Git target
 :ViewWinCredConfig
-  (if "%LOCAL_GIT_PROVIDER%"=="github" (
-    set targetname=git:https://github.com
-  ) else if "%LOCAL_GIT_PROVIDER%"=="gitlab" (
-    set targetname=git:https://gitlab.com
-  ) else if "%LOCAL_GIT_PROVIDER%"=="bitbucket" (
-    set targetname=git:https://bitbucket.org
-  ))
-
   cmdKey /list:%targetname%
 EXIT /B 0
 
@@ -292,11 +289,13 @@ EXIT /B 0
 
 
 :: Reads the local LOCAL_SETTINGS_FILE user-preference file into variables
+:: Initializes the Windows Credential Manager target from user preference file
 :ReadUserPreferenceFile
   if exist %LOCAL_SETTINGS_FILE% (
     for /f "tokens=1,2 delims==" %%a in (%LOCAL_SETTINGS_FILE%) do (
       if "%%a"=="GIT_PROVIDER" (
         set LOCAL_GIT_PROVIDER=%%b
+        CALL :SetWinCredTarget %%b
       )
     )
   ) else (
@@ -336,6 +335,23 @@ EXIT /B 0
     echo [INFO]: %program% not installed
     EXIT /B 1
   )
+EXIT /B 0
+
+
+:: Sets the Windows Credential Manager domain target
+:: Sets the GIT_PROVIDER and targetname global variables
+:: @param 1: Git provider platform (github|gitlab|bitbucket)
+:SetWinCredTarget
+  set "gitProvider=%~1"
+  set GIT_PROVIDER=%gitProvider%
+
+  (if "%GIT_PROVIDER%"=="%PLAT_GITHUB%" (
+    set targetname=%TARGET_GITHUB%
+  ) else if "%GIT_PROVIDER%"=="%PLAT_GITLAB%" (
+    set targetname=%TARGET_GITLAB%
+  ) else if "%GIT_PROVIDER%"=="%PLAT_BITBUCKET%" (
+    set targetname=%TARGET_BITBUCKET%
+  ))
 EXIT /B 0
 
 
