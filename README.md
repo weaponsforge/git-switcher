@@ -1,6 +1,6 @@
 # git-switcher
 
-The **git-switcher** repository contains Windows batch scripts that offer easy switching between different Git global user account credentials, resetting the Git user's password for GitHub, GitLab, or BitBucket using two (2) options:
+The **git-switcher** repository contains simple, no-external dependency (except for Git) Windows batch scripts that offer easy switching between different Git global user account identities, resetting the Git user's password for GitHub, GitLab, or BitBucket using two (2) options:
 
 - Windows Credential Manager using `main-wincred.bat`
 - A `~/.gitcredential` file using `main.bat`
@@ -24,7 +24,9 @@ After a successful Git global account switch and password reset using `main.bat`
 	- Installed using default options
 3. Git account
 	- GitHub, Gitlab, Bitbucket
-4. (Optional) Gpg4win [[link]](https://www.gpg4win.org/)
+4. Windows Credential Manager
+   - Installed by default in Windows machines
+5. (Optional) Gpg4win [[link]](https://www.gpg4win.org/)
    - Installing Gpg4win and signing commits with a GPG key is optional.
    - For reference, this project uses the following specs:
       ```

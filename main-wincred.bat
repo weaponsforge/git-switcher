@@ -28,8 +28,6 @@ GOTO Init
   set PLAT_GITLAB=gitlab
   set PLAT_BITBUCKET=bitbucket
 
-  set /A errorCount=0
-
   :: Check required software
   CALL :CheckInstalled git
   set /A errCount += %errorlevel%
@@ -55,9 +53,7 @@ EXIT /B 0
   set "PERSONAL_ACCESS_TOKEN="
   set "GPG_KEY="
 
-  set "doreset="
   set "targetname="
-  set /A isInstalled=0
   set /A choice=1
   set /A gitrepository=4
 
@@ -207,6 +203,8 @@ EXIT /B 0
 :: Deletes the password in the Windows Credential Manager
 :: for the newly-set git user so it will be prompted on the next git operation
 :ResetPassword
+  set "doreset="
+
   echo.
   set /p doreset=Would you like to reset the password? [Y/n]:
 
