@@ -7,7 +7,8 @@ The **git-switcher** repository contains simple, no-external dependency (except
 
 After a successful Git global account switch and password reset using `main.bat`, subsequent Git pull/push/fetch will prompt for the Git user password or Personal Access Token (PAT).
 
-> Subsequent Git pull/push/fetch will NOT prompt for the Git user password or Personal Access Token (PAT) if this token is provided in the `.env` file when using the `main-wincred.bat` script.
+> [!TIP]
+> Subsequent Git `pull/push/fetch` will NOT prompt for the Git user **password** or **Personal Access Token (PAT)** if this token is provided in the `.env` file when using the **main-wincred.bat** script.
 
 <br>
 
