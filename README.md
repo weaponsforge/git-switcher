@@ -106,7 +106,8 @@ After a successful Git global account switch and password reset using `main.bat`
 
 Configure your GitBash first with the following settings before using the script.
 
-> ***WARNING:** These settings remove the Windows Credential Manager process handling for Git to a text-based ".gitcredentials" file from an easy-to-access location. Proceed at your discretion.*
+> [!WARNING]  
+> *These settings remove the Windows Credential Manager process handling for Git to a text-based ".gitcredentials" file from an easy-to-access location. Proceed at your discretion.*
 
 1. Open a command prompt as an **Administrator**  and run the command:<br>
 `git config --global credential.helper "store --file ~/.gitcredential`
