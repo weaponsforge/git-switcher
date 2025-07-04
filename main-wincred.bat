@@ -52,6 +52,7 @@ EXIT /B 0
   set "GIT_EMAIL="
   set "PERSONAL_ACCESS_TOKEN="
   set "GPG_KEY="
+  set "CONFIRM_RESET="
 
   set "targetname="
   set /A choice=1
@@ -116,6 +117,10 @@ EXIT /B 0
     GOTO ProcessError
   ) else (
     CALL :ResetPassword
+
+    if /i not "!CONFIRM_RESET!"=="Y" (
+      GOTO Main
+    )
 
     :: Set the password in Windows Credential Manager if its present in the .env file
     if defined PERSONAL_ACCESS_TOKEN (
@@ -201,14 +206,15 @@ EXIT /B 0
 
 
 :: Deletes the password in the Windows Credential Manager
-:: for the newly-set git user so it will be prompted on the next git operation
+:: for the newly-set git user so it will be prompted on the next git operation.
+:: It also sets the CONFIRM_RESET global variable - confirmation for resetting the password.
 :ResetPassword
-  set "doreset="
+  set "CONFIRM_RESET="
 
   echo.
-  set /p doreset=Would you like to reset the password? [Y/n]:
+  set /p CONFIRM_RESET=Would you like to reset the password? [Y/n]:
 
-  if /i "%doreset%"=="Y" (
+  if /i "%CONFIRM_RESET%"=="Y" (
     :: Delete Git credentials in the Windows Credential Manager
     for /f "delims=" %%i in ('cmdKey /delete:%targetname% 2^>^&1') do set "output=%%i"
 
