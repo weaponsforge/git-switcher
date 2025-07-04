@@ -75,6 +75,8 @@ EXIT /B 0
     GOTO PromptUserInput
   ) else if %choice% EQU 3 (
     EXIT /B 0
+  ) else (
+    GOTO Main
   ))
 EXIT /B 0
 
